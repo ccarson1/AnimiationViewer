@@ -1,4 +1,5 @@
 import wx
+import wx.adv
 import pygame
 from pygame.locals import *
 import os
@@ -10,11 +11,24 @@ from menupanel import MenuPanel
 class SpriteViewer(wx.Frame):
     def __init__(self):
         super().__init__(None, title="SpriteSheet Animator", size=(800, 600))
+        
+        # Set the window icon using the ICO file
+        icon = wx.Icon("icon.ico", wx.BITMAP_TYPE_ICO)
+        self.SetIcon(icon)
 
-        # Main panel
+        # Set the taskbar icon using the PNG image
+        taskbar_icon_image = wx.Image("icon.png", wx.BITMAP_TYPE_PNG)
+        taskbar_icon_bitmap = wx.Bitmap(taskbar_icon_image)
+        self.taskbar_icon = wx.adv.TaskBarIcon()
+        self.taskbar_icon.SetIcon(taskbar_icon_bitmap, "My App Taskbar Icon")
+
+        # Set the taskbar icon's context menu
+        self.taskbar_icon.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.on_right_click)
+
+        # Main panel for layout
         panel = wx.Panel(self)
 
-        # Initialize MenuPanel
+        # Initialize MenuPanel (replace with actual MenuPanel implementation)
         self.menu_panel = MenuPanel(
             panel,
             self.on_create,
@@ -39,15 +53,27 @@ class SpriteViewer(wx.Frame):
         # Initialize the animation manager
         self.animation_manager = AnimationManager()
 
+        # Initialize necessary variables for the animation
         self.image_surface = None  # To hold the loaded image surface
-
         self.frames = []
         self.tick_count = 0
         self.animation_index = 0
         self.current_animation = None
         self.animation_speed = 5  # Adjust speed as needed
-        self.last_direction = "left" 
+        self.last_direction = "left"
         self.current_direction = ""
+
+
+    def on_right_click(self, event):
+        menu = wx.Menu()
+        item_quit = menu.Append(wx.ID_EXIT, "Quit")
+        self.Bind(wx.EVT_MENU, self.on_quit, item_quit)
+        self.PopupMenu(menu)
+        menu.Destroy()
+
+    def on_quit(self, event):
+        self.taskbar_icon.RemoveIcon()
+        self.Close()
 
     def init_pygame(self, viewer_panel):
         hwnd = viewer_panel.GetHandle()
@@ -55,8 +81,13 @@ class SpriteViewer(wx.Frame):
         os.environ['SDL_VIDEODRIVER'] = 'windib'
 
         pygame.init()
-        self.screen = pygame.display.set_mode((600, 600), RESIZABLE)
+        self.screen = pygame.display.set_mode((viewer_panel.GetSize().width, viewer_panel.GetSize().height))
         pygame.display.init()
+
+        # Set taskbar icon after initializing Pygame
+        taskbar_icon_image = wx.Image("icon.png", wx.BITMAP_TYPE_PNG)
+        taskbar_icon_bitmap = wx.Bitmap(taskbar_icon_image)
+        self.taskbar_icon.SetIcon(taskbar_icon_bitmap, "My App Taskbar Icon")
 
         self.clock = pygame.time.Clock()
         self.running = True
