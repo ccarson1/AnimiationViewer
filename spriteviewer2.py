@@ -269,8 +269,18 @@ class SpriteViewer(wx.Frame):
 
 
     def on_remove_element(self, selected_index):
+        # Get the selected element from the menu panel
         item = self.menu_panel.list_ctrl.GetString(selected_index)
+        
+        # Extract the name of the animation from the string (assumed format: "name (widthxheight, frames frames, Row: row, Key: keybinding)")
+        name = item.split(" ")[0]
+        
+        # Remove the animation from the animation manager
+        self.animation_manager.remove_animation(name)
+        
+        # Remove the element from the menu panel list
         self.menu_panel.list_ctrl.Delete(selected_index)
-        print(f"Removed element: {item}")
+        
+        print(f"Removed animation element: {name}")
 
 

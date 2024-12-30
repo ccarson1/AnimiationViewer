@@ -68,12 +68,7 @@ class MenuPanel(wx.Panel):
         list_section_sizer.Add(remove_element_btn, 0, wx.EXPAND | wx.ALL, 5)
 
         # Add widgets to the main menu sizer
-        # menu_sizer.Add(self.top_down, 0, wx.ALL | wx.EXPAND, 10)
-        # menu_sizer.Add(self.platform, 0, wx.ALL | wx.EXPAND, 10)
         menu_sizer.Add(type_sizer, 0, wx.ALL | wx.EXPAND, 10)
-
-        # menu_sizer.Add(self.start_left, 0, wx.ALL | wx.EXPAND, 10)
-        # menu_sizer.Add(self.start_right, 0, wx.ALL | wx.EXPAND, 10)
         menu_sizer.Add(orient_sizer, 0, wx.ALL | wx.EXPAND, 10)
         
         menu_sizer.Add(upload_btn, 0, wx.ALL | wx.EXPAND, 10)

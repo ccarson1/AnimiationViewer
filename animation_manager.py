@@ -52,3 +52,10 @@ class AnimationManager:
         if animation_name:
             return self.animations[animation_name]["frames"]
         return None
+    
+    def remove_animation(self, name):
+        """Remove an animation by name"""
+        if name in self.animations:
+            del self.animations[name]
+        else:
+            print(f"Animation {name} not found!")
